@@ -1,0 +1,1455 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voss Estate Advisory</title>
+  <meta name="description" content="Частный консультант по покупке премиальной международной недвижимости: закрытые объекты, стратегия рынка, проверка и сопровождение сделки." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    /* ─── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --ink:        #181614;
+      --ink-mid:    rgba(24,22,20,.62);
+      --ink-soft:   rgba(24,22,20,.38);
+      --cream:      #F6F1E9;
+      --cream-dark: #EDE6D9;
+      --gold:       #9E7B4E;
+      --gold-light: #C9A97A;
+      --white:      #FDFAF5;
+
+      --ff-head: 'Cormorant Garamond', Georgia, serif;
+      --ff-body: 'Manrope', system-ui, sans-serif;
+
+      --ease: cubic-bezier(.22,.68,0,1.2);
+      --ease-out: cubic-bezier(.16,1,.3,1);
+
+      /* V-mark: the brand accent used for visual rhyming */
+      --v-size: 7px;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: var(--ff-body);
+      font-size: 15px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── V-mark: reusable brand accent ─────────────────────────── */
+    /* Used as ::before / ::after on dividers, badges, arrows */
+    .v-accent::before {
+      content: '';
+      display: inline-block;
+      width: var(--v-size);
+      height: var(--v-size);
+      border-left: 1px solid var(--gold);
+      border-bottom: 1px solid var(--gold);
+      transform: rotate(-45deg) translateY(-2px);
+      margin-right: 10px;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    /* ─── Navigation ─────────────────────────────────────────────── */
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 48px;
+      transition: background .4s, box-shadow .4s;
+    }
+    .site-header.scrolled {
+      background: rgba(246,241,233,.94);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 rgba(24,22,20,.08);
+    }
+
+    .brand {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--white);
+      transition: color .3s;
+    }
+    .site-header.scrolled .brand { color: var(--ink); }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-head);
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: .02em;
+      flex-shrink: 0;
+    }
+    .brand-name {
+      font-family: var(--ff-body);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .desktop-nav {
+      display: flex;
+      gap: 36px;
+    }
+    .desktop-nav a {
+      font-size: 11.5px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(255,255,255,.72);
+      transition: color .25s;
+    }
+    .site-header.scrolled .desktop-nav a { color: var(--ink-mid); }
+    .desktop-nav a:hover { color: var(--gold-light); }
+    .site-header.scrolled .desktop-nav a:hover { color: var(--gold); }
+
+    .header-cta {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--gold-light);
+      border: 1px solid rgba(201,169,122,.45);
+      padding: 9px 20px;
+      transition: background .25s, color .25s, border-color .25s;
+    }
+    .site-header.scrolled .header-cta {
+      color: var(--gold);
+      border-color: rgba(158,123,78,.35);
+    }
+    .header-cta:hover {
+      background: var(--gold);
+      color: var(--white);
+      border-color: var(--gold);
+    }
+
+    /* ─── Hero ───────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100svh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      transform: scale(1.04);
+      animation: subtle-zoom 14s var(--ease-out) forwards;
+    }
+    @keyframes subtle-zoom {
+      to { transform: scale(1); }
+    }
+
+    /* Gradient overlay: dark bottom, transparent top-right */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(18,14,10,.82) 0%, rgba(18,14,10,.45) 45%, rgba(18,14,10,.15) 100%),
+        linear-gradient(105deg, rgba(18,14,10,.5) 0%, transparent 60%);
+    }
+
+    /* ─── Star of the Show: abstract grid motif ──────────────────── */
+    /* Represents the "filter grid" — fine lines like property criteria */
+    .hero-star {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 50%;
+      height: 100%;
+      pointer-events: none;
+      opacity: .18;
+    }
+    .hero-star svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 48px 72px;
+      max-width: 720px;
+      animation: hero-rise .9s .2s var(--ease-out) both;
+    }
+    @keyframes hero-rise {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .eyebrow {
+      font-family: var(--ff-body);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .eyebrow::before {
+      content: '';
+      display: block;
+      width: 28px;
+      height: 1px;
+      background: var(--gold-light);
+      flex-shrink: 0;
+    }
+
+    .hero h1 {
+      font-family: var(--ff-head);
+      font-size: clamp(42px, 6vw, 72px);
+      font-weight: 500;
+      line-height: 1.1;
+      color: var(--white);
+      letter-spacing: -.01em;
+      margin-bottom: 28px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--white);
+      background: var(--gold);
+      padding: 14px 28px;
+      transition: background .25s, gap .25s var(--ease);
+    }
+    .hero-cta:hover { background: #8A6A40; gap: 18px; }
+    .hero-cta-arrow {
+      width: 14px;
+      height: 1px;
+      background: currentColor;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .hero-cta-arrow::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: -3px;
+      width: 7px;
+      height: 7px;
+      border-right: 1px solid currentColor;
+      border-top: 1px solid currentColor;
+      transform: rotate(45deg);
+    }
+
+    /* Stats bar — bottom of hero, replaces hero-brief */
+    .hero-stats {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      z-index: 2;
+      display: flex;
+      gap: 0;
+      animation: hero-rise .9s .5s var(--ease-out) both;
+    }
+    .hero-stat {
+      padding: 24px 36px;
+      background: rgba(18,14,10,.55);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(201,169,122,.22);
+      border-left: 1px solid rgba(201,169,122,.1);
+      text-align: center;
+    }
+    .hero-stat strong {
+      display: block;
+      font-family: var(--ff-head);
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--gold-light);
+      letter-spacing: -.01em;
+      line-height: 1;
+    }
+    .hero-stat span {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.5);
+      margin-top: 5px;
+    }
+
+    /* ─── Section wrappers ───────────────────────────────────────── */
+    section { padding: 96px 48px; }
+
+    .section-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    h2 {
+      font-family: var(--ff-head);
+      font-size: clamp(32px, 3.5vw, 48px);
+      font-weight: 500;
+      line-height: 1.15;
+      letter-spacing: -.01em;
+      color: var(--ink);
+    }
+
+    /* ─── Intro ──────────────────────────────────────────────────── */
+    .intro-section {
+      background: var(--white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: end;
+    }
+    .intro-section h2 {
+      max-width: 520px;
+    }
+    .intro-right p {
+      font-size: 15.5px;
+      line-height: 1.75;
+      color: var(--ink-mid);
+      max-width: 420px;
+      margin-bottom: 32px;
+    }
+    .text-link {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--gold);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: gap .2s var(--ease), color .2s;
+    }
+    .text-link::after {
+      content: '→';
+      font-size: 13px;
+      transition: transform .2s var(--ease);
+    }
+    .text-link:hover { color: var(--ink); gap: 14px; }
+
+    /* ─── Signal band ────────────────────────────────────────────── */
+    .signal-band {
+      padding: 56px 48px;
+      background: var(--ink);
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 1px;
+    }
+    .signal-item {
+      padding: 44px 40px;
+      background: var(--ink);
+      position: relative;
+    }
+    .signal-item + .signal-item {
+      border-left: 1px solid rgba(255,255,255,.07);
+    }
+    .signal-num {
+      font-family: var(--ff-head);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: .15em;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: block;
+    }
+    .signal-item strong {
+      display: block;
+      font-family: var(--ff-head);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--white);
+      margin-bottom: 12px;
+      letter-spacing: -.01em;
+    }
+    .signal-item p {
+      font-size: 14px;
+      line-height: 1.65;
+      color: rgba(255,255,255,.48);
+    }
+    /* V-accent divider on signal items */
+    .signal-item::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 40px;
+      width: 20px;
+      height: 1px;
+      background: var(--gold);
+      opacity: .4;
+    }
+
+    /* ─── Collection ─────────────────────────────────────────────── */
+    .collection-section {
+      background: var(--cream);
+    }
+    .collection-head {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: end;
+      margin-bottom: 52px;
+    }
+    .collection-head p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--ink-mid);
+      max-width: 400px;
+      align-self: end;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-bottom: 44px;
+    }
+    .filter-btn {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      background: transparent;
+      border: 1px solid rgba(24,22,20,.18);
+      color: var(--ink-mid);
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .filter-btn.active {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+
+    .property-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 24px;
+    }
+    .property-card {
+      background: var(--white);
+      overflow: hidden;
+      transition: transform .35s var(--ease-out), box-shadow .35s;
+    }
+    .property-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 48px rgba(24,22,20,.1);
+    }
+    .property-card.featured {
+      grid-column: span 2;
+    }
+    .property-card.featured .card-img-wrap {
+      height: 340px;
+    }
+    .card-img-wrap {
+      position: relative;
+      height: 240px;
+      overflow: hidden;
+    }
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .6s var(--ease-out);
+    }
+    .property-card:hover .card-img-wrap img {
+      transform: scale(1.04);
+    }
+    .card-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: var(--gold-light);
+      padding: 5px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    /* V-mark in badge */
+    .card-badge::before {
+      content: '';
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-left: 1px solid var(--gold-light);
+      border-bottom: 1px solid var(--gold-light);
+      transform: rotate(-45deg) translateY(-1px);
+      flex-shrink: 0;
+    }
+    .card-body { padding: 24px; }
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .card-body h3 {
+      font-family: var(--ff-head);
+      font-size: 21px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 10px;
+      letter-spacing: -.01em;
+      line-height: 1.2;
+    }
+    .card-body p {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--ink-mid);
+      margin-bottom: 16px;
+    }
+    .card-notes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      border-top: 1px solid var(--cream-dark);
+      padding-top: 14px;
+    }
+    .card-note-item dt {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 3px;
+    }
+    .card-note-item dd {
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    /* ─── Markets ────────────────────────────────────────────────── */
+    .markets-section {
+      background: var(--white);
+    }
+    .markets-head {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: end;
+      margin-bottom: 60px;
+    }
+    .markets-head p {
+      font-size: 15px;
+      color: var(--ink-mid);
+      line-height: 1.75;
+      max-width: 400px;
+      align-self: end;
+    }
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 1px;
+      background: var(--cream-dark);
+    }
+    .market-card {
+      background: var(--white);
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: background .25s;
+    }
+    .market-card:hover { background: var(--cream); }
+    /* V-accent top border on hover */
+    .market-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .35s var(--ease-out);
+    }
+    .market-card:hover::before { transform: scaleX(1); }
+    .market-city {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+    .market-card h3 {
+      font-family: var(--ff-head);
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 10px;
+      line-height: 1.25;
+      letter-spacing: -.01em;
+    }
+    .market-card p {
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--ink-mid);
+      margin-bottom: 14px;
+    }
+    .market-check {
+      font-size: 11.5px;
+      color: var(--ink-soft);
+      font-style: italic;
+      font-family: var(--ff-head);
+      border-top: 1px solid var(--cream-dark);
+      padding-top: 14px;
+      line-height: 1.5;
+    }
+
+    /* ─── Method / Process ───────────────────────────────────────── */
+    .method-section {
+      background: var(--cream);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+      padding: 0;
+    }
+    .method-img {
+      height: 680px;
+      overflow: hidden;
+    }
+    .method-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .method-content {
+      padding: 96px 64px 96px 0;
+    }
+    .method-content .section-label { margin-bottom: 20px; }
+    .method-content h2 { margin-bottom: 52px; }
+
+    .journey-list { display: flex; flex-direction: column; gap: 0; }
+    .journey-step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 0 20px;
+      padding: 18px 0;
+      border-bottom: 1px solid rgba(24,22,20,.08);
+      align-items: start;
+      transition: background .2s;
+    }
+    .journey-step:last-child { border-bottom: none; }
+    .step-num {
+      font-family: var(--ff-head);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: .1em;
+      color: var(--gold);
+      padding-top: 2px;
+    }
+    .step-body strong {
+      display: block;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+    .step-body p {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--ink-mid);
+    }
+
+    /* ─── Confidential band ──────────────────────────────────────── */
+    .confidential-band {
+      background: var(--ink);
+      padding: 72px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .confidential-band .section-label { color: var(--gold-light); }
+    .confidential-band .section-label::before { background: var(--gold-light); }
+    .confidential-band h2 { color: var(--white); }
+    .confidential-band p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: rgba(255,255,255,.5);
+    }
+
+    /* ─── Advisor ────────────────────────────────────────────────── */
+    .advisor-section {
+      background: var(--white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    /* Portrait placeholder — premium monogram treatment */
+    .advisor-portrait {
+      aspect-ratio: 3/4;
+      background: var(--cream-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Subtle grid lines — visual rhyme with hero star */
+    .advisor-portrait::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(158,123,78,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(158,123,78,.08) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .advisor-monogram {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      border: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* V-shape in monogram corners */
+    .advisor-monogram::before,
+    .advisor-monogram::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-color: var(--gold);
+      border-style: solid;
+    }
+    .advisor-monogram::before {
+      top: -1px; left: -1px;
+      border-width: 1px 0 0 1px;
+    }
+    .advisor-monogram::after {
+      bottom: -1px; right: -1px;
+      border-width: 0 1px 1px 0;
+    }
+    .advisor-monogram span {
+      font-family: var(--ff-head);
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--gold);
+      letter-spacing: -.02em;
+    }
+
+    .advisor-copy .section-label { margin-bottom: 16px; }
+    .advisor-copy h2 {
+      font-size: clamp(36px, 3.5vw, 54px);
+      margin-bottom: 6px;
+    }
+    .advisor-title {
+      font-family: var(--ff-head);
+      font-size: 16px;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 28px;
+    }
+    .advisor-copy > p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--ink-mid);
+      max-width: 420px;
+      margin-bottom: 40px;
+    }
+
+    .advisor-stats {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .advisor-stat strong {
+      display: block;
+      font-family: var(--ff-head);
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -.02em;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .advisor-stat p {
+      font-size: 12px;
+      line-height: 1.4;
+      color: var(--ink-soft);
+    }
+
+    .advisor-principles {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .advisor-principle {
+      padding: 20px;
+      border: 1px solid var(--cream-dark);
+      position: relative;
+    }
+    /* V top-left corner accent */
+    .advisor-principle::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 14px; height: 14px;
+      border-top: 1px solid var(--gold);
+      border-left: 1px solid var(--gold);
+    }
+    .advisor-principle > span {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .advisor-principle strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .advisor-principle p {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--ink-mid);
+    }
+
+    /* ─── Request form ───────────────────────────────────────────── */
+    .request-section {
+      background: var(--cream);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .request-copy .section-label { margin-bottom: 16px; }
+    .request-copy h2 { margin-bottom: 20px; }
+    .request-copy > p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--ink-mid);
+    }
+
+    .request-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .request-form .field-full { grid-column: span 2; }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-field label {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+    }
+    .form-field select,
+    .form-field input {
+      font-family: var(--ff-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--ink);
+      background: var(--white);
+      border: 1px solid rgba(24,22,20,.14);
+      border-bottom: 1px solid rgba(24,22,20,.3);
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+      width: 100%;
+    }
+    .form-field select:focus,
+    .form-field input:focus {
+      border-color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    .btn-submit {
+      grid-column: span 2;
+      font-family: var(--ff-body);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      padding: 16px 32px;
+      cursor: pointer;
+      transition: background .25s;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .btn-submit:hover { background: var(--gold); }
+    .btn-submit::after {
+      content: '→';
+      font-size: 14px;
+    }
+
+    .form-note {
+      grid-column: span 2;
+      font-size: 11.5px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      font-style: italic;
+      font-family: var(--ff-head);
+    }
+
+    /* ─── Footer ─────────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--ink);
+      padding: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .footer-brand .brand-mark { border-color: rgba(201,169,122,.35); }
+    .footer-brand-text strong {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.7);
+    }
+    .footer-brand-text p {
+      font-size: 12px;
+      color: rgba(255,255,255,.3);
+      margin-top: 2px;
+    }
+    .footer-back {
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(255,255,255,.3);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color .2s;
+    }
+    .footer-back:hover { color: var(--gold-light); }
+
+    /* ─── Scroll-reveal ──────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ─── Mobile ─────────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      section { padding: 72px 24px; }
+      .site-header { padding: 18px 24px; }
+      .desktop-nav { display: none; }
+      .hero-content { padding: 0 24px 60px; }
+      .hero-stats { display: none; }
+      .intro-section,
+      .collection-head,
+      .markets-head,
+      .confidential-band,
+      .advisor-section,
+      .request-section { grid-template-columns: 1fr; gap: 40px; }
+      .method-section { grid-template-columns: 1fr; }
+      .method-img { height: 320px; }
+      .method-content { padding: 48px 24px; }
+      .signal-band { grid-template-columns: 1fr; padding: 0; }
+      .signal-item + .signal-item { border-left: none; border-top: 1px solid rgba(255,255,255,.07); }
+      .property-grid { grid-template-columns: 1fr; }
+      .property-card.featured { grid-column: span 1; }
+      .market-grid { grid-template-columns: 1fr 1fr; }
+      .advisor-stats { grid-template-columns: 1fr 1fr 1fr; }
+      .request-form { grid-template-columns: 1fr; }
+      .request-form .field-full,
+      .btn-submit,
+      .form-note { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Navigation ──────────────────────────────────────────────── -->
+  <header class="site-header" data-header>
+    <a class="brand" href="#top" aria-label="Voss Estate Advisory">
+      <div class="brand-mark">V</div>
+      <span class="brand-name">Voss Estate Advisory</span>
+    </a>
+    <nav class="desktop-nav" aria-label="Основная навигация">
+      <a href="#collection">Объекты</a>
+      <a href="#markets">Рынки</a>
+      <a href="#method">Процесс</a>
+      <a href="#advisor">Консультант</a>
+    </nav>
+    <a class="header-cta" href="#request">Запросить подбор</a>
+  </header>
+
+  <main id="top">
+
+    <!-- ─── Hero ──────────────────────────────────────────────────── -->
+    <section class="hero">
+      <img
+        class="hero-img"
+        src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=2400&q=86"
+        alt="Пентхаус с панорамным видом на вечерний город"
+        loading="eager"
+      />
+      <div class="hero-overlay"></div>
+
+      <!-- Star of the Show: filter-grid SVG motif -->
+      <div class="hero-star" aria-hidden="true">
+        <svg viewBox="0 0 600 800" preserveAspectRatio="xMaxYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Fine grid lines — abstraction of "filtering" -->
+          <defs>
+            <pattern id="grid" x="0" y="0" width="48" height="48" patternUnits="userSpaceOnUse">
+              <path d="M 48 0 L 0 0 0 48" stroke="#C9A97A" stroke-width=".6" fill="none"/>
+            </pattern>
+          </defs>
+          <rect width="600" height="800" fill="url(#grid)"/>
+          <!-- V-accent corner marks -->
+          <path d="M 0 0 L 60 0 L 60 4" stroke="#C9A97A" stroke-width="1.2" fill="none"/>
+          <path d="M 0 0 L 0 60 L 4 60" stroke="#C9A97A" stroke-width="1.2" fill="none"/>
+          <path d="M 600 800 L 540 800 L 540 796" stroke="#C9A97A" stroke-width="1.2" fill="none"/>
+          <path d="M 600 800 L 600 740 L 596 740" stroke="#C9A97A" stroke-width="1.2" fill="none"/>
+          <!-- Diagonal emphasis lines -->
+          <line x1="200" y1="0" x2="600" y2="400" stroke="#C9A97A" stroke-width=".4" opacity=".5"/>
+          <line x1="0" y1="200" x2="400" y2="600" stroke="#C9A97A" stroke-width=".4" opacity=".5"/>
+        </svg>
+      </div>
+
+      <div class="hero-content">
+        <p class="eyebrow">Закрытый международный подбор</p>
+        <h1>Недвижимость для<br><em>жизни, капитала</em><br>и переезда</h1>
+        <a class="hero-cta" href="#request">
+          Запросить закрытую подборку
+          <span class="hero-cta-arrow" aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <!-- Stats moved from hero-brief to bottom bar -->
+      <aside class="hero-stats" aria-label="Ключевые показатели">
+        <div class="hero-stat">
+          <strong>€180M</strong>
+          <span>сделок проведено</span>
+        </div>
+        <div class="hero-stat">
+          <strong>17</strong>
+          <span>рынков в сети</span>
+        </div>
+        <div class="hero-stat">
+          <strong>12+</strong>
+          <span>лет в сегменте</span>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ─── Intro ──────────────────────────────────────────────────── -->
+    <section class="intro-section reveal">
+      <div class="intro-left">
+        <p class="section-label">Персональное сопровождение</p>
+        <h2>Премиальная сделка начинается не с поиска. Она начинается с фильтра.</h2>
+      </div>
+      <div class="intro-right">
+        <p>
+          В дорогом сегменте клиенту нужен не бесконечный каталог, а спокойный
+          отбор: какие рынки подходят, какие объекты стоит смотреть, где риски
+          завышены и как безопасно дойти до сделки.
+        </p>
+        <a class="text-link" href="#method">Как проходит покупка</a>
+      </div>
+    </section>
+
+    <!-- ─── Signal band ────────────────────────────────────────────── -->
+    <div class="signal-band" aria-label="Ключевые принципы">
+      <div class="signal-item reveal">
+        <span class="signal-num">01</span>
+        <strong>Закрытый доступ</strong>
+        <p>Предложения не из открытой рекламы, предварительная проверка продавца и аккуратная коммуникация.</p>
+      </div>
+      <div class="signal-item reveal" style="transition-delay:.1s">
+        <span class="signal-num">02</span>
+        <strong>Логика рынка</strong>
+        <p>Каждый объект оценивается через ликвидность, налоги, спрос и сценарий выхода.</p>
+      </div>
+      <div class="signal-item reveal" style="transition-delay:.2s">
+        <span class="signal-num">03</span>
+        <strong>Один консультант</strong>
+        <p>Один контакт держит стратегию, подборку, переговоры и координацию сделки.</p>
+      </div>
+    </div>
+
+    <!-- ─── Collection ─────────────────────────────────────────────── -->
+    <section class="collection-section" id="collection">
+      <div class="collection-head reveal">
+        <div>
+          <p class="section-label">Отобранная подборка</p>
+          <h2>Объекты, которые проходят фильтр цели</h2>
+        </div>
+        <p>
+          Карточка объекта объясняет, кому он подходит и что нужно
+          проверить до покупки. Сценарий владения — не опция, а часть подборки.
+        </p>
+      </div>
+
+      <div class="filter-bar" role="group" aria-label="Фильтр объектов">
+        <button class="filter-btn active" type="button" data-filter="all">Все</button>
+        <button class="filter-btn" type="button" data-filter="city">Пентхаусы</button>
+        <button class="filter-btn" type="button" data-filter="villa">Виллы</button>
+        <button class="filter-btn" type="button" data-filter="investment">Инвестиции</button>
+        <button class="filter-btn" type="button" data-filter="offmarket">Закрытые</button>
+      </div>
+
+      <div class="property-grid">
+        <article class="property-card featured reveal" data-category="city investment offmarket">
+          <div class="card-img-wrap">
+            <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=84" alt="Сервисная резиденция, Dubai" loading="lazy"/>
+            <span class="card-badge">Закрытая продажа</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta"><span>Dubai, Palm Jumeirah</span><span>Цена по запросу</span></div>
+            <h3>Сервисная резиденция с частной террасой</h3>
+            <p>Комбинация личного использования, сервисной инфраструктуры и понятного спроса на аренду. Объект интересен как база в Дубае и как ликвидный актив.</p>
+            <dl class="card-notes">
+              <div class="card-note-item"><dt>Подходит</dt><dd>Переезд и капитал</dd></div>
+              <div class="card-note-item"><dt>Проверить</dt><dd>Сервисные платежи и ликвидность</dd></div>
+            </dl>
+          </div>
+        </article>
+
+        <article class="property-card reveal" data-category="villa offmarket" style="transition-delay:.1s">
+          <div class="card-img-wrap">
+            <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=84" alt="Вилла Marbella" loading="lazy"/>
+            <span class="card-badge">Частная продажа</span>
+          </div>
+          <div class="card-body">
+            <div class="card-meta"><span>Marbella, Golden Mile</span><span>€7.2M</span></div>
+            <h3>Вилла в закрытом поселке</h3>
+            <p>Архитектурная резиденция для семьи: приватная улица, сад, гостевой дом и быстрый доступ к международным школам.</p>
+            <dl class="card-notes">
+              <div class="card-note-item"><dt>Подходит</dt><dd>Второй дом</dd></div>
+              <div class="card-note-item"><dt>Проверить</dt><dd>Правила поселка</dd></div>
+            </dl>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ─── Markets ────────────────────────────────────────────────── -->
+    <section class="markets-section" id="markets">
+      <div class="markets-head reveal">
+        <div>
+          <p class="section-label">Рынки</p>
+          <h2>Четыре направления с разной логикой владения</h2>
+        </div>
+        <p>Важны не только вид и адрес. Нужно учитывать юридику, ликвидность, налоги, валюту и сценарий будущей продажи.</p>
+      </div>
+      <div class="market-grid">
+        <article class="market-card reveal">
+          <p class="market-city">Dubai</p>
+          <h3>Сервисные резиденции и понятные налоги</h3>
+          <p>Сильный спрос на дома с управлением, быстрые сделки и международная ликвидность.</p>
+          <p class="market-check">Проверить: сервисные платежи, объем нового строительства</p>
+        </article>
+        <article class="market-card reveal" style="transition-delay:.08s">
+          <p class="market-city">London</p>
+          <h3>Статусные адреса и сохранение капитала</h3>
+          <p>Mayfair, Belgravia и Kensington работают как долгосрочный капитал.</p>
+          <p class="market-check">Проверить: формат владения, налог при покупке</p>
+        </article>
+        <article class="market-card reveal" style="transition-delay:.16s">
+          <p class="market-city">Marbella</p>
+          <h3>Виллы, школы и закрытые поселки</h3>
+          <p>Рынок подходит для второго дома, семейной релокации и спокойного образа жизни.</p>
+          <p class="market-check">Проверить: правила поселка, разрешения на реконструкцию</p>
+        </article>
+        <article class="market-card reveal" style="transition-delay:.24s">
+          <p class="market-city">Lisbon Coast</p>
+          <h3>Евро-актив у воды</h3>
+          <p>Баланс личного использования и аренды при правильном выборе управляющей компании.</p>
+          <p class="market-check">Проверить: сезонность, лицензии, расходы на управление</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ─── Method ────────────────────────────────────────────────── -->
+    <section class="method-section" id="method">
+      <div class="method-img">
+        <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1500&q=84" alt="Премиальный интерьер" loading="lazy"/>
+      </div>
+      <div class="method-content reveal">
+        <p class="section-label">Путь покупателя</p>
+        <h2>Покупка как последовательность решений</h2>
+        <nav class="journey-list" aria-label="Этапы покупки">
+          <div class="journey-step"><span class="step-num">01</span><div class="step-body"><strong>Запрос</strong><p>Цель, сроки, бюджет, приватность, семейные и инвестиционные критерии.</p></div></div>
+          <div class="journey-step"><span class="step-num">02</span><div class="step-body"><strong>Стратегия рынка</strong><p>Выбор рынков и исключение направлений, где риск не соответствует задаче.</p></div></div>
+          <div class="journey-step"><span class="step-num">03</span><div class="step-body"><strong>Закрытая подборка</strong><p>5–7 объектов с причиной подбора, рисками и планом просмотра.</p></div></div>
+          <div class="journey-step"><span class="step-num">04</span><div class="step-body"><strong>Показы</strong><p>Дистанционные или личные показы с протоколом сравнения.</p></div></div>
+          <div class="journey-step"><span class="step-num">05</span><div class="step-body"><strong>Переговоры</strong><p>Позиция по цене, условиям, срокам и включенным активам.</p></div></div>
+          <div class="journey-step"><span class="step-num">06</span><div class="step-body"><strong>Проверка</strong><p>Юридическая, налоговая и техническая проверка объекта.</p></div></div>
+          <div class="journey-step"><span class="step-num">07</span><div class="step-body"><strong>Закрытие</strong><p>Завершение сделки, передача объекта и подключение управления.</p></div></div>
+        </nav>
+      </div>
+    </section>
+
+    <!-- ─── Confidential band ─────────────────────────────────────── -->
+    <div class="confidential-band reveal">
+      <div>
+        <p class="section-label">Конфиденциальность</p>
+        <h2 style="color:var(--white)">Критерии клиента не становятся частью открытого рынка</h2>
+      </div>
+      <p>По запросу коммуникация начинается с NDA. Данные о бюджете, сроках, семье, структуре владения и приоритетных адресах передаются только проверенным участникам сделки.</p>
+    </div>
+
+    <!-- ─── Advisor ────────────────────────────────────────────────── -->
+    <section class="advisor-section" id="advisor">
+      <!-- Portrait — replace src with real photo when available -->
+      <div class="advisor-portrait" aria-label="Портрет консультанта">
+        <div class="advisor-monogram"><span>EV</span></div>
+      </div>
+
+      <div class="advisor-copy reveal">
+        <p class="section-label">Частный консультант</p>
+        <h2>Elena Voss</h2>
+        <p class="advisor-title">Международная недвижимость · Закрытые сделки</p>
+        <p>
+          Один ответственный контакт между покупателем, рынком, юристами,
+          локальными брокерами и продавцом. Фокус: международные сделки,
+          закрытые объекты и точный отбор без публичного раскрытия критериев.
+        </p>
+
+        <div class="advisor-stats">
+          <div class="advisor-stat"><strong>12+</strong><p>лет в премиальном сегменте</p></div>
+          <div class="advisor-stat"><strong>€180M</strong><p>сопровождённый объём</p></div>
+          <div class="advisor-stat"><strong>17</strong><p>рынков в партнёрской сети</p></div>
+        </div>
+
+        <div class="advisor-principles">
+          <div class="advisor-principle">
+            <span>Мандат</span>
+            <strong>На стороне покупателя</strong>
+            <p>Фокус на интересах клиента: рынок, риски, торг и структура владения.</p>
+          </div>
+          <div class="advisor-principle">
+            <span>Доступ</span>
+            <strong>Проверенная сеть</strong>
+            <p>Локальные партнёры, юристы, налоговые консультанты и управляющие.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── Request form ──────────────────────────────────────────── -->
+    <section class="request-section" id="request">
+      <div class="request-copy reveal">
+        <p class="section-label">Первичная анкета</p>
+        <h2>Запросите закрытую подборку под вашу цель покупки</h2>
+        <p>
+          Запрос фиксирует основные параметры. После этого консультант
+          готовит первичную гипотезу по рынкам и уточняет критерии перед
+          раскрытием конкретных объектов.
+        </p>
+      </div>
+
+      <form class="request-form" data-request-form novalidate>
+        <div class="form-field">
+          <label for="goal">Цель покупки</label>
+          <select id="goal" name="goal" required>
+            <option value="">Выберите сценарий</option>
+            <option>Жизнь и переезд</option>
+            <option>Инвестиции и аренда</option>
+            <option>Второй дом у моря</option>
+            <option>Сохранение капитала</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="budget">Бюджет</label>
+          <select id="budget" name="budget" required>
+            <option value="">Выберите диапазон</option>
+            <option>€1M–€3M</option>
+            <option>€3M–€7M</option>
+            <option>€7M–€15M</option>
+            <option>€15M+</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="market">Приоритетный рынок</label>
+          <select id="market" name="market" required>
+            <option value="">Выберите рынок</option>
+            <option>Dubai</option>
+            <option>London</option>
+            <option>Marbella</option>
+            <option>Lisbon</option>
+            <option>Не определился</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="timeline">Срок покупки</label>
+          <select id="timeline" name="timeline" required>
+            <option value="">Выберите срок</option>
+            <option>До 3 месяцев</option>
+            <option>3–6 месяцев</option>
+            <option>6–12 месяцев</option>
+            <option>Изучаю рынок</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="privacy">Уровень приватности</label>
+          <select id="privacy" name="privacy" required>
+            <option value="">Выберите формат</option>
+            <option>Обычная коммуникация</option>
+            <option>Приватная коммуникация</option>
+            <option>NDA до раскрытия критериев</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="contact">Контакт</label>
+          <input id="contact" name="contact" type="text" placeholder="Telegram, WhatsApp или email" required />
+        </div>
+        <button class="btn-submit" type="submit">Запросить подборку</button>
+        <p class="form-note">Все данные передаются конфиденциально и не раскрываются третьим сторонам без вашего согласия.</p>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- ─── Footer ────────────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <div class="brand-mark" style="color:var(--gold);border-color:rgba(201,169,122,.35)">V</div>
+      <div class="footer-brand-text">
+        <strong>Voss Estate Advisory</strong>
+        <p>Частное сопровождение покупки международной недвижимости</p>
+      </div>
+    </div>
+    <a class="footer-back" href="#top">↑ Наверх</a>
+  </footer>
+
+  <script>
+    // Scroll: header style
+    const header = document.querySelector('[data-header]');
+    const onScroll = () => header.classList.toggle('scrolled', scrollY > 60);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Scroll-reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+    }, { threshold: .12 });
+    reveals.forEach(el => io.observe(el));
+
+    // Filter buttons
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.property-card');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const f = btn.dataset.filter;
+        cards.forEach(c => {
+          const show = f === 'all' || c.dataset.category?.includes(f);
+          c.style.display = show ? '' : 'none';
+        });
+      });
+    });
+
+    // Form submit
+    const form = document.querySelector('[data-request-form]');
+    if (form) {
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = form.querySelector('.btn-submit');
+        btn.textContent = 'Запрос отправлен';
+        btn.style.background = 'var(--gold)';
+        btn.disabled = true;
+      });
+    }
+  </script>
+</body>
+</html>
